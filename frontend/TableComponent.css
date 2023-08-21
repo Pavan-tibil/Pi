@@ -1,0 +1,17 @@
+/* TableComponent.css */
+.custom-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .custom-table th,
+  .custom-table td {
+    border: 1px solid #ccc; /* Border around cells */
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .custom-table th + th {
+    border-left: 1px solid #ccc; /* Add a left border to the second th element */
+  }
+  
