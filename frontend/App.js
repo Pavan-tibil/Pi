@@ -2,18 +2,19 @@ import React, { useState, useEffect } from 'react'
 import { Image, View, Text, Modal, Button, StyleSheet, ActivityIndicator } from 'react-native'
 import DocumentScanner, { ResponseType } from 'react-native-document-scanner-plugin'
 import axios from 'axios'
+import { Icon } from 'react-native-elements';
 
 export default app = () => {
   const [scannedImage, setScannedImage] = useState();
   const [modalVisible, setModalVisible] = useState(false);
   const [predictions, setPredictions] = useState([]);
-
   const [isLoading, setIsLoading] = useState(false);
+  const [resultsPage, setResultsPage] = useState(1);
 
 
   const Card = ({ title, content }) => {
     return (
-      <View style={styles.card}>
+      <View style={cardStyles.card}>
         <View>
           <Text>{'title'}</Text>
           <Text>{'value'}</Text>
@@ -29,7 +30,7 @@ export default app = () => {
     );
   };
 
-  const styles = StyleSheet.create({
+  const cardStyles = StyleSheet.create({
     card: {
       backgroundColor: 'white',
       borderRadius: 5,
@@ -54,7 +55,99 @@ export default app = () => {
 
   useEffect(() => {
     // call scanDocument on load
-    scanDocument();
+   // scanDocument();
+   setPredictions({
+        "cert_details": [
+            {
+                "stream": "COMMERCE"
+            },
+            {
+                "school_no": "31.01.004"
+            },
+            {
+                "month_year": "FEBRUARY-18"
+            },
+            {
+                "board": "MUMBAI DIVISIONAL BOARD"
+            },
+            {
+                "seat_no": "M226965"
+            },
+            {
+                "sr_no": "170644"
+            },
+            {
+                "centre_no": "3008"
+            },
+            {
+                "name": "Khan Aryan Tanvir"
+            },
+            {
+                "mothers_name": "Sherry"
+            }
+        ],
+        "subjects": [
+            {
+                "subject_name": "ENGLISH",
+                "subject_code": "01",
+                "obtained_marks": "068",
+                "medium": "ENG",
+                "max_marks": "100"
+            },
+            {
+                "subject_name": "ECONOMICS",
+                "subject_code": "48",
+                "max_marks": "100",
+                "obtained_marks": "089",
+                "medium": "ENG"
+            },
+            {
+                "subject_name": "BOOK KEEPING & ACCOUNTANCY",
+                "subject_code": "S0",
+                "max_marks": "100",
+                "obtained_marks": "063",
+                "medium": "ENG"
+            },
+            {
+                "subject_name": "ORGANISATION OF COMN & MGMT",
+                "subject_code": "51"
+            },
+            {
+                "subject_name": "",
+                "subject_code": "100"
+            },
+            {
+                "subject_name": "OFFICE MANAGEMENT",
+                "subject_code": "A7",
+                "max_marks": "‘",
+                "obtained_marks": "189",
+                "medium": "ENG"
+            },
+            {
+                "subject_name": "ENVIRONMENT EDUCATION",
+                "subject_code": "31",
+                "obtained_marks": "048",
+                "medium": "ENG",
+                "max_marks": "050"
+            }
+        ],
+        "result": [
+            {
+                "result": "PASS"
+            },
+            {
+                "percentage": "83.54"
+            },
+            {
+                "total_max_marks": "650"
+            },
+            {
+                "total_obtained_marks": "543"
+            }
+        ]
+    }
+    );
+   toggleModal();
   }, []);
 
 
@@ -101,6 +194,16 @@ export default app = () => {
       setIsLoading(false);
     }
   }
+
+  const goToNextPage = () => {
+    let nextPage = resultsPage + 1;
+    setResultsPage(nextPage);
+ }
+
+ const goToPrevPage = () => {
+  let nextPage = resultsPage - 1;
+  setResultsPage(nextPage);
+ }
 
   const tableStyles = StyleSheet.create({
     headerText: {
@@ -149,20 +252,26 @@ export default app = () => {
       color: '#052C3C',
       fontFamily: 'Fira Sans',
       fontSize: 10,
+      borderBottomWidth: 0,
+      width: '100%'
     }
   });
 
+
   const Table = () => {
+    let certDetailsKeys = [
+      {label: "STREAM", key: "stream"}, 
+      {label: "SEAT No.", key: "seat_no"}]
     return (
       <>
         <View>
           <Text style={tableStyles.headerText}>{'Mumbai Divisional Board'.toUpperCase()}</Text>
         </View>
         <View style={tableStyles.table}>
-          {predictions.map((data, index) => (
+          {certDetailsKeys.map((data, index) => (
             <View style={tableStyles.row} key={`${index}-prediction`}>
-              <Text style={tableStyles.cell}>{data.tag.toUpperCase()} </Text>
-              <Text style={tableStyles.cell}> {data.text} </Text>
+              <Text style={tableStyles.cell}>{data.label} </Text>
+              <Text style={tableStyles.cell}> {predictions.cert_details.find(obj => obj[data.key])[data.key]} </Text>
             </View>
           ))}
         </View>
@@ -179,6 +288,53 @@ export default app = () => {
     }
   });
 
+  renderPredictionsData = (pageNumber) => {
+    switch(pageNumber) {
+     case 1:
+         return (
+          <View style={tableStyles.container}>
+            <Table />
+          </View>
+         )
+     case 2:
+          return (<Text>Second Page</Text>)
+
+     default:
+         return (<Text>Third Page</Text>)
+    }
+ }
+
+ const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    marginTop: 19,
+    marginRight: 15,
+    marginLeft: 15,
+    backgroundColor: 'white'
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: "space-around",
+    marginLeft: 15,
+    marginRight: 15,
+    marginBottom: 19,
+    paddingBottom: 30,
+    paddingHorizontal: 60,
+    alignItems: 'center',
+    backgroundColor: 'white'
+  },
+  disabledIcon: {
+    backgroundColor: 'white',
+    color: '#C2C2C2',
+    opacity: 0.5
+  },
+  text: {
+    marginVertical: 5,
+    marginBottom: 5
+  },
+ });
 
   return (
     isLoading ? (
@@ -187,7 +343,7 @@ export default app = () => {
       </View>
     ) : (
 
-      <View>
+      <View style={{ flex: 1 }}>
         <Image
           resizeMode="contain"
           style={{ width: '100%', height: '80%' }}
@@ -200,14 +356,30 @@ export default app = () => {
           visible={modalVisible}
           onRequestClose={toggleModal}
         >
-          <View style={tableStyles.container}>
-            <Table />
+
+          <View style={{ flex: 1, backgroundColor: '#CDD8DD', borderRadius: 4 }}>
+            <View style={styles.container}>
+              {/* <View> */}
+              {
+                renderPredictionsData(resultsPage)
+              }
+              {/* </View> */}
+            </View>
+
+            <View style={styles.buttonsContainer}>
+              <Icon disabled={true} disabledStyle={styles.disabledIcon}  name="verticleright" size={20}  type="antdesign" onPress={goToPrevPage}/>
+                <Icon name="left" size={20} color="#199AB7" type="antdesign" onPress={goToPrevPage}/>
+                <Text>{resultsPage}</Text>
+                <Icon name="right" size={20} color="#199AB7" type="antdesign" onPress={goToNextPage}/>
+                <Icon disabled={true} disabledStyle={styles.disabledIcon} name="verticleleft" size={20} type="antdesign" onPress={goToPrevPage}/>
+            </View>
           </View>
 
-          <View style={tableStyles.container}>
+
+          {/* <View style={tableStyles.container}>
             <Card />
 
-          </View>
+          </View> */}
 
         </Modal>
       </View>
