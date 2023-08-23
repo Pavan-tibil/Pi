@@ -18,14 +18,17 @@ export default app = () => {
   console.log(subjects);
     return (
       <>
-        <View>
-          <Text style={tableStyles.headerText}>{'Medium'.toUpperCase()}</Text>
-        </View>
 
         <View style={cardStyles.container}>
+        <Text style={{ color: '#396677', fontFamily: 'fira sans', fontSize: 10, marginBottom: 20 }}>{'Medium'.toUpperCase()} : <Text style={{ fontSize: 14, color: '#07394D' }}>{'ENG'}</Text></Text>
           <ScrollView>
 
-          <Card subject={subjects[0]}></Card>  
+          <Card subject={subjects[0]}></Card>
+          <Card subject={subjects[1]}></Card> 
+          <Card subject={subjects[2]}></Card>  
+          <Card subject={subjects[3]}></Card> 
+          <Card subject={subjects[4]}></Card>
+          <Card subject={subjects[5]}></Card>  
 
           </ScrollView>
         </View>
@@ -38,29 +41,30 @@ export default app = () => {
       let sub = props.subject;
       return (
         <View style={cardStyles.table}>
-    
-            <View style={cardStyles.row}>
-              <View style={cardStyles.cell}>
-              <Text> SUBJECT CODE: </Text>
-              <Text> {sub.subject_code} </Text>
-              </View>
-              <View style={cardStyles.cell}>
-              <Text> SUBJECT NAME: </Text>
-              <Text> {sub.subject_name} </Text>
-              </View>
+  
+          <View style={cardStyles.row}>
+            <View style={cardStyles.cell}>
+              <Text style={{ fontSize: 10, color: '#396677' }}> SUBJECT CODE: </Text>
+              <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.subject_code} </Text>
             </View>
-            <View style={cardStyles.row}>
-              <View style={cardStyles.cell}>
-              <Text> MAX MARKS: </Text>
-              <Text> {sub.max_marks} </Text>
-              </View>
-              <View style={cardStyles.cell}>
-              <Text> MARKS OBTAINED: </Text>
-              <Text> {sub.obtained_marks} </Text>
-              </View>
+            <View style={cardStyles.cell}>
+              <Text style={{ fontSize: 10, color: '#396677' }}> SUBJECT NAME: </Text>
+              <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.subject_name} </Text>
             </View>
-    
+          </View>
+          <View style={cardStyles.row}>
+            <View style={cardStyles.cell}>
+              <Text style={{ fontSize: 10, color: '#396677' }}> MAX MARKS: </Text>
+              <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.max_marks} </Text>
+            </View>
+            <View style={cardStyles.cell}>
+              <Text style={{ fontSize: 10, color: '#396677' }}> MARKS OBTAINED: </Text>
+              <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.obtained_marks} </Text>
+            </View>
+          </View>
+  
         </View>
+        
       )
   }
 
@@ -147,98 +151,98 @@ export default app = () => {
 
   useEffect(() => {
     // call scanDocument on load
-    // scanDocument();
-    setPredictions({
-      "cert_details": [
-        {
-          "stream": "COMMERCE"
-        },
-        {
-          "school_no": "31.01.004"
-        },
-        {
-          "month_year": "FEBRUARY-18"
-        },
-        {
-          "board": "MUMBAI DIVISIONAL BOARD"
-        },
-        {
-          "seat_no": "M226965"
-        },
-        {
-          "sr_no": "170644"
-        },
-        {
-          "centre_no": "3008"
-        },
-        {
-          "name": "Khan Aryan Tanvir"
-        },
-        {
-          "mothers_name": "Sherry"
-        }
-      ],
-      "subjects": [
-        {
-          "subject_name": "ENGLISH",
-          "subject_code": "01",
-          "obtained_marks": "068",
-          "medium": "ENG",
-          "max_marks": "100"
-        },
-        {
-          "subject_name": "ECONOMICS",
-          "subject_code": "48",
-          "max_marks": "100",
-          "obtained_marks": "089",
-          "medium": "ENG"
-        },
-        {
-          "subject_name": "BOOK KEEPING & ACCOUNTANCY",
-          "subject_code": "S0",
-          "max_marks": "100",
-          "obtained_marks": "063",
-          "medium": "ENG"
-        },
-        {
-          "subject_name": "ORGANISATION OF COMN & MGMT",
-          "subject_code": "51"
-        },
-        {
-          "subject_name": "",
-          "subject_code": "100"
-        },
-        {
-          "subject_name": "OFFICE MANAGEMENT",
-          "subject_code": "A7",
-          "max_marks": "‘",
-          "obtained_marks": "189",
-          "medium": "ENG"
-        },
-        {
-          "subject_name": "ENVIRONMENT EDUCATION",
-          "subject_code": "31",
-          "obtained_marks": "048",
-          "medium": "ENG",
-          "max_marks": "050"
-        }
-      ],
-      "result": [
-        {
-          "result": "PASS"
-        },
-        {
-          "percentage": "83.54"
-        },
-        {
-          "total_max_marks": "650"
-        },
-        {
-          "total_obtained_marks": "543"
-        }
-      ]
-    }
-    );
+     scanDocument();
+    // setPredictions({
+    //   "cert_details": [
+    //     {
+    //       "stream": "COMMERCE"
+    //     },
+    //     {
+    //       "school_no": "31.01.004"
+    //     },
+    //     {
+    //       "month_year": "FEBRUARY-18"
+    //     },
+    //     {
+    //       "board": "MUMBAI DIVISIONAL BOARD"
+    //     },
+    //     {
+    //       "seat_no": "M226965"
+    //     },
+    //     {
+    //       "sr_no": "170644"
+    //     },
+    //     {
+    //       "centre_no": "3008"
+    //     },
+    //     {
+    //       "name": "Khan Aryan Tanvir"
+    //     },
+    //     {
+    //       "mothers_name": "Sherry"
+    //     }
+    //   ],
+    //   "subjects": [
+    //     {
+    //       "subject_name": "ENGLISH",
+    //       "subject_code": "01",
+    //       "obtained_marks": "068",
+    //       "medium": "ENG",
+    //       "max_marks": "100"
+    //     },
+    //     {
+    //       "subject_name": "ECONOMICS",
+    //       "subject_code": "48",
+    //       "max_marks": "100",
+    //       "obtained_marks": "089",
+    //       "medium": "ENG"
+    //     },
+    //     {
+    //       "subject_name": "BOOK KEEPING & ACCOUNTANCY",
+    //       "subject_code": "S0",
+    //       "max_marks": "100",
+    //       "obtained_marks": "063",
+    //       "medium": "ENG"
+    //     },
+    //     {
+    //       "subject_name": "ORGANISATION OF COMN & MGMT",
+    //       "subject_code": "51"
+    //     },
+    //     {
+    //       "subject_name": "",
+    //       "subject_code": "100"
+    //     },
+    //     {
+    //       "subject_name": "OFFICE MANAGEMENT",
+    //       "subject_code": "A7",
+    //       "max_marks": "‘",
+    //       "obtained_marks": "189",
+    //       "medium": "ENG"
+    //     },
+    //     {
+    //       "subject_name": "ENVIRONMENT EDUCATION",
+    //       "subject_code": "31",
+    //       "obtained_marks": "048",
+    //       "medium": "ENG",
+    //       "max_marks": "050"
+    //     }
+    //   ],
+    //   "result": [
+    //     {
+    //       "result": "PASS"
+    //     },
+    //     {
+    //       "percentage": "83.54"
+    //     },
+    //     {
+    //       "total_max_marks": "650"
+    //     },
+    //     {
+    //       "total_obtained_marks": "543"
+    //     }
+    //   ]
+    // }
+    // );
     toggleModal();
   }, []);
 
@@ -294,6 +298,14 @@ export default app = () => {
     }
   }
 
+  const goToFirstPage = () => {
+      setResultsPage(1);
+  }
+
+  const goToLastPage = () => {
+      setResultsPage(3);
+  }
+
   const goToPrevPage = () => {
     if (resultsPage > 1) {
       let nextPage = resultsPage - 1;
@@ -304,8 +316,8 @@ export default app = () => {
   const tableStyles = StyleSheet.create({
     headerText: {
       color: '#052C3C',
-      fontFamily: 'fira sans',
-      fontSize: 14,
+     // fontFamily: 'FiraSans-Regular',
+      fontSize: 20,
       fontWeight: 'bold',
       textAlign: 'center',
       width: '100%',
@@ -332,10 +344,22 @@ export default app = () => {
       borderColor: "#CDD8DD",
       borderStyle: "dashed",
       fontSize: 10,
-      color: "black",
-      fontFamily: 'Fira Sans',
-      fontWeight: '500',
-      height:44,
+      color: "#396677",
+      fontFamily: 'FiraSans-Regular',
+      fontWeight: "500",
+      height: 44,
+    },cell2: {
+      flex: 1,
+      padding: 10,
+      borderWidth: 1,
+      borderRadius: 1,
+      borderColor: "#CDD8DD",
+      borderStyle: "dashed",
+      fontSize: 14,
+      color: "#07394D",
+      fontFamily: 'FiraSans-Regular',
+      fontWeight: "400",
+      height: 44,
     },
     container: {
       flex: 1,
@@ -372,7 +396,7 @@ export default app = () => {
           {certDetailsKeys.map((data, index) => (
             <View style={tableStyles.row} key={`${index}-prediction`}>
               <Text style={tableStyles.cell}>{data.label} </Text>
-              <Text style={[tableStyles.cell,{fontSize:14}]}> {predictions.cert_details.find(obj => obj[data.key])[data.key]} </Text>
+              <Text style={[tableStyles.cell2,{fontSize:14}]}> {predictions.cert_details.find(obj => obj[data.key])[data.key]} </Text>
             </View>
           ))}
         </View>
@@ -449,16 +473,28 @@ export default app = () => {
       justifyContent: "space-around",
       marginLeft: 15,
       marginRight: 15,
-      marginBottom: 19,
-      paddingBottom: 30,
+      paddingBottom: 20,
       paddingHorizontal: 60,
       alignItems: 'center',
       backgroundColor: 'white'
+    },    
+    logo: {
+      justifyContent: "center",
+      alignItems: 'center',
+      backgroundColor: 'white',
+      marginBottom: 19,
+      paddingBottom: 10,
+      marginLeft: 15,
+      marginRight: 15,
     },
     disabledIcon: {
       backgroundColor: 'white',
       color: '#C2C2C2',
       opacity: 0.5
+    },
+    arrowIcon: {
+      backgroundColor: 'white',
+      color: '#199AB7'
     },
     text: {
       marginVertical: 5,
@@ -497,19 +533,17 @@ export default app = () => {
             </View>
 
             <View style={styles.buttonsContainer}>
-              <Icon disabled={true} disabledStyle={styles.disabledIcon} name="verticleright" size={20} type="antdesign" onPress={goToPrevPage} />
-              <Icon name="left" size={20} color="#199AB7" type="antdesign" onPress={goToPrevPage} />
+              <Icon disabled={ resultsPage === 1 ? true: false } disabledStyle={ resultsPage === 1 ? styles.disabledIcon: styles.enabledIcon} name="verticleright" size={20} type="antdesign" color="#199AB7" onPress={goToFirstPage} />
+              <Icon disabled={ resultsPage === 1 ? true: false } disabledStyle={ resultsPage === 1 ? styles.disabledIcon: styles.enabledIcon} name="left" size={20} color="#199AB7" type="antdesign" onPress={goToPrevPage} />
               <Text>{resultsPage}</Text>
-              <Icon name="right" size={20} color="#199AB7" type="antdesign" onPress={goToNextPage} />
-              <Icon disabled={true} disabledStyle={styles.disabledIcon} name="verticleleft" size={20} type="antdesign" onPress={goToPrevPage} />
+              <Icon disabled={ resultsPage === 3 ? true: false } disabledStyle={styles.disabledIcon} name="right" size={20} color="#199AB7" type="antdesign" onPress={goToNextPage} />
+              <Icon disabled={ resultsPage === 3 ? true: false } disabledStyle={styles.disabledIcon} name="verticleleft" size={20} type="antdesign" onPress={goToLastPage}  color="#199AB7" />
             </View>
+            <View style={styles.logo}>
+            <Image source={require('./assets/images/P!_logo.png')} style={{ width: 17, height: 20 }}/>
+            </View>
+            
           </View>
-
-
-          {/* <View style={tableStyles.container}>
-            <Card />
-
-          </View> */}
 
         </Modal>
       </View>
