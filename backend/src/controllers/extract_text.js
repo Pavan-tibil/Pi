@@ -18,12 +18,19 @@ exports.extractData = async (req, res) => {
 
         await worker.loadLanguage('eng');
         await worker.initialize('eng');
-        await worker.setParameters({ tessedit_pageseg_mode: PSM.SINGLE_LINE });
+        // await worker.setParameters({ tessedit_pageseg_mode: PSM.SINGLE_LINE });
+        await worker.setParameters({
+            tessedit_pageseg_mode: PSM.SINGLE_LINE,
+            tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.-& ' // Add the characters you want to whitelist
+        });
         const values = [];
         let buff = Buffer.from(image, 'base64');
         let image1 = await Jimp.read(buff);
+        image1 = image1
+            .grayscale() // Convert to grayscale
+            // .contrast(0.5) // Adjust contrast
+            // .brightness(0.2); // Adjust brightness
         output = await image1.resize(1700, 2200).getBase64Async(Jimp.MIME_JPEG)
-        console.log(output.split(',')[1]);
         let convertedBuffer = Buffer.from(output.split(',')[1], 'base64');
 
 
@@ -36,23 +43,63 @@ exports.extractData = async (req, res) => {
 
         await worker.terminate();
         console.log(values);
+        const subjectsArray = []
         for (const data of values) {
             if (data.tag.startsWith('sub_')) {
                 const spilted_data = data.text.split(' ');
                 const subject_code = spilted_data.shift();
                 const subject_name = spilted_data.join(' ');
-                console.log(subject_code,subject_name);
-                data.subjects = []
-                values.push({ tag: 'subject_name', text: subject_name, confidence: data.confidence }, { tag: 'subject_code', text: subject_code, confidence: data.confidence })
+                const subject_details = { 'subject_name': subject_name, 'subject_code': subject_code }
+                subjectsArray.push(subject_details)
             }
         }
-        filtered_values = values.filter(item => !item.tag.startsWith('sub_'));
-        console.log(filtered_values);
-        let update_extracted_data = { board_name: board_name, exam_type: exam_type, stream: stream, examination_year: examination_year, data: filtered_values, image: output.split(',')[1] }
-        await DATA.create(update_extracted_data)
-        console.log(update_extracted_data);
 
-        res.status(200).json(update_extracted_data);
+        for (const item of values) {
+            if (item.tag.startsWith('marks_')) {
+                const subjectName = item.tag.replace('marks_', '');
+                const subjectData = subjectsArray.find(subject => subject.subject_name === subjectName);
+
+                if (subjectData) {
+                    const obtained_marks = item.text;
+                    subjectData.obtained_marks = obtained_marks;
+                    subjectData.medium = "ENG"
+                }
+            }
+            if (item.tag.startsWith('max_marks_')) {
+                const subjectName = item.tag.replace('max_marks_', '');
+                const subjectData = subjectsArray.find(subject => subject.subject_name === subjectName);
+                if (subjectData) {
+                    const max_marks = item.text;
+                    subjectData.max_marks = max_marks;
+
+                }
+            }
+        }
+        const desiredTags = ['board', 'stream', 'seat_no', 'centre_no', 'school_no', 'month_year', 'sr_no', 'name', 'mothers_name']
+        const extractedCertificateData = []
+        const results = ['result', 'percentage', 'total_max_marks', 'total_obtained_marks']
+        const extractedResultsData = []
+        for (const item of values) {
+            if (desiredTags.includes(item.tag)) {
+                extractedCertificateData.push({ [item.tag]: item.text })
+            }
+            if (results.includes(item.tag)) {
+                extractedResultsData.push({ [item.tag]: item.text })
+            }
+        }
+        const finalOutput = { "cert_details": extractedCertificateData, "subjects": subjectsArray, "result": extractedResultsData }
+        console.log(finalOutput);
+        const a = []
+        for (const i of values) {
+            a.push(i.confidence)
+        }
+        sum = a.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        accuracyPercentage = (sum/(a.length*100)) * 100
+        console.log("Prediction accuracy: " + accuracyPercentage + "%");
+        let update_extracted_data = { board_name: board_name, exam_type: exam_type, stream: stream, examination_year: examination_year, extracted_data: finalOutput, image: output.split(',')[1] }
+        await DATA.create(update_extracted_data)
+
+        res.status(200).json(finalOutput);
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to extract data' });
