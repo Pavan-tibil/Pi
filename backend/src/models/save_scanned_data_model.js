@@ -21,8 +21,8 @@ const todoSchema = new mongoose.Schema({
         required: false,
         trim: true
     },
-    data: {
-        type: Array,
+    extracted_data: {
+        type: Object,
         required: false,
         trim: true
     },
