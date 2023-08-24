@@ -10,6 +10,7 @@ export default app = () => {
   const [predictions, setPredictions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [resultsPage, setResultsPage] = useState(1);
+  const [showHomePage, setShowHomePage] = useState(true);
 
 
   const Subjects = () => {
@@ -151,7 +152,7 @@ export default app = () => {
 
   useEffect(() => {
     // call scanDocument on load
-    scanDocument();
+   // scanDocument();
     // setPredictions({
     //   "cert_details": [
     //     {
@@ -252,6 +253,8 @@ export default app = () => {
   };
 
   const scanDocument = async () => {
+
+    setShowHomePage(false);
     // start the document scanner
     const { scannedImages } = await DocumentScanner.scanDocument({
       croppedImageQuality: 100,
@@ -520,7 +523,14 @@ export default app = () => {
       </View>
     ) : (
 
-      <View style={{ flex: 1 }}>
+      showHomePage ? (
+        
+        <View style={styles.container}>
+          <Text>Home</Text>
+        </View>
+
+      ) : (
+        <View style={{ flex: 1 }}>
         <Image
           resizeMode="contain"
           style={{ width: '100%', height: '80%' }}
@@ -558,5 +568,8 @@ export default app = () => {
 
         </Modal>
       </View>
+      )
+
+
     ))
 }
