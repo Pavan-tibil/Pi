@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Image, View, Text, Modal, Button, StyleSheet, ActivityIndicator, ScrollView } from 'react-native'
 import DocumentScanner, { ResponseType } from 'react-native-document-scanner-plugin'
 import axios from 'axios'
-import { Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements'
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export default app = () => {
   const [scannedImage, setScannedImage] = useState();
@@ -11,6 +12,8 @@ export default app = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [resultsPage, setResultsPage] = useState(1);
   const [showHomePage, setShowHomePage] = useState(true);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
 
 
   const Subjects = () => {
@@ -46,21 +49,21 @@ export default app = () => {
         <View style={cardStyles.row}>
           <View style={cardStyles.cell}>
             <Text style={{ fontSize: 10, color: '#396677' }}> SUBJECT CODE: </Text>
-            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.subject_code  || " "} </Text>
+            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.subject_code || " "} </Text>
           </View>
           <View style={cardStyles.cell}>
             <Text style={{ fontSize: 10, color: '#396677' }}> SUBJECT NAME: </Text>
-            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.subject_name  || " "}  </Text>
+            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.subject_name || " "}  </Text>
           </View>
         </View>
         <View style={cardStyles.row}>
           <View style={cardStyles.cell}>
             <Text style={{ fontSize: 10, color: '#396677' }}> MAX MARKS: </Text>
-            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.max_marks  || " "} </Text>
+            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.max_marks || " "} </Text>
           </View>
           <View style={cardStyles.cell}>
             <Text style={{ fontSize: 10, color: '#396677' }}> MARKS OBTAINED: </Text>
-            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.obtained_marks || " " }  </Text>
+            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.obtained_marks || " "}  </Text>
           </View>
         </View>
 
@@ -152,7 +155,7 @@ export default app = () => {
 
   useEffect(() => {
     // call scanDocument on load
-   // scanDocument();
+    // scanDocument();
     // setPredictions({
     //   "cert_details": [
     //     {
@@ -294,7 +297,7 @@ export default app = () => {
         console.log(predictions);
         setIsLoading(false);
         toggleModal();
-        
+
       }, 1000);
     } catch (e) {
       console.log('err', e);
@@ -516,6 +519,67 @@ export default app = () => {
     },
   });
 
+
+  const DropdownExample = () => {
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState([]);
+    const [items, setItems] = useState([
+      { label: 'Maharashtra Board', value: 'Maharashtra_Board' },
+      { label: 'Japan Board', value: 'Japan_Board' },
+    ]);
+
+    useEffect(() => {
+      if (value !== undefined) {
+        setIsButtonDisabled(false)
+      }
+    }, [value])
+    return (
+      <View style={{
+        // backgroundColor: 'transparent',
+        flex: 1,
+        fontSize: 14,
+        fontFamily: 'Fira Sans',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 15,
+
+      }}>
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+
+          // theme="DARK"
+          multiple={true}
+          mode="BADGE"
+        // badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
+        />
+      </View>
+    );
+  };
+  const styles5 = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    label: {
+      fontSize: 18,
+      marginBottom: 10,
+    },
+    picker: {
+      width: 200,
+      height: 50,
+      borderWidth: 1,
+      borderColor: 'gray',
+    },
+    selectedValue: {
+      marginTop: 20,
+    },
+  });
   return (
     isLoading ? (
       <View style={loaderStyle.centered}>
@@ -524,50 +588,60 @@ export default app = () => {
     ) : (
 
       showHomePage ? (
-        
-        <View style={styles.container}>
-          <Text>Home</Text>
-        </View>
-
-      ) : (
-        <View style={{ flex: 1 }}>
-        <Image
-          resizeMode="contain"
-          style={{ width: '100%', height: '80%' }}
-          source={{ uri: `data:image/jpeg;base64,${scannedImage}` }}
-        />
-
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={modalVisible}
-          onRequestClose={toggleModal}
-        >
-
-          <View style={{ flex: 1, backgroundColor: '#CDD8DD', borderRadius: 4 }}>
-            <View style={styles.container}>
-              {/* <View> */}
-              {
-                renderPredictionsData(resultsPage)
-              }
-              {/* </View> */}
-            </View>
-
-            <View style={styles.buttonsContainer}>
-              <Icon disabled={resultsPage === 1 ? true : false} disabledStyle={resultsPage === 1 ? styles.disabledIcon : styles.enabledIcon} name="verticleright" size={20} type="antdesign" color="#199AB7" onPress={goToFirstPage} />
-              <Icon disabled={resultsPage === 1 ? true : false} disabledStyle={resultsPage === 1 ? styles.disabledIcon : styles.enabledIcon} name="left" size={20} color="#199AB7" type="antdesign" onPress={goToPrevPage} />
-              <Text>{resultsPage}</Text>
-              <Icon disabled={resultsPage === 3 ? true : false} disabledStyle={styles.disabledIcon} name="right" size={20} color="#199AB7" type="antdesign" onPress={goToNextPage} />
-              <Icon disabled={resultsPage === 3 ? true : false} disabledStyle={styles.disabledIcon} name="verticleleft" size={20} type="antdesign" onPress={goToLastPage} color="#199AB7" />
-            </View>
-            <View style={styles.logo}>
-              <Image source={require('./assets/images/P!_logo.png')} style={{ width: 17, height: 20 }} />
-            </View>
+        <>
+          <View style={styles5.container}>
+            <DropdownExample />
+          </View>
+          <View>
+            <Button
+              title="Scan"
+              onPress={() => scanDocument()}
+              disabled={isButtonDisabled}
+            />
 
           </View>
+          <Text>{''}</Text>
+          <View style={styles.logo}>
+            <Image source={require('./assets/images/P!_logo.png')} style={{ width: 17, height: 20 }} />
+          </View>
+        </>
+      ) : (
+        <View style={{ flex: 1 }}>
+          <Image
+            resizeMode="contain"
+            style={{ width: '100%', height: '80%' }}
+            source={{ uri: `data:image/jpeg;base64,${scannedImage}` }}
+          />
 
-        </Modal>
-      </View>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={modalVisible}
+            onRequestClose={toggleModal}
+          >
+
+            <View style={{ flex: 1, backgroundColor: '#CDD8DD', borderRadius: 4 }}>
+              <View style={styles.container}>
+                {/* <View> */}
+                {
+                  renderPredictionsData(resultsPage)
+                }
+                {/* </View> */}
+              </View>
+
+              <View style={styles.buttonsContainer}>
+                <Icon disabled={resultsPage === 1 ? true : false} disabledStyle={resultsPage === 1 ? styles.disabledIcon : styles.enabledIcon} name="verticleright" size={20} type="antdesign" color="#199AB7" onPress={goToFirstPage} />
+                <Icon disabled={resultsPage === 1 ? true : false} disabledStyle={resultsPage === 1 ? styles.disabledIcon : styles.enabledIcon} name="left" size={20} color="#199AB7" type="antdesign" onPress={goToPrevPage} />
+                <Text>{resultsPage}</Text>
+                <Icon disabled={resultsPage === 3 ? true : false} disabledStyle={styles.disabledIcon} name="right" size={20} color="#199AB7" type="antdesign" onPress={goToNextPage} />
+                <Icon disabled={resultsPage === 3 ? true : false} disabledStyle={styles.disabledIcon} name="verticleleft" size={20} type="antdesign" onPress={goToLastPage} color="#199AB7" />
+              </View>
+              <View style={styles.logo}>
+                <Image source={require('./assets/images/P!_logo.png')} style={{ width: 17, height: 20 }} />
+              </View>
+            </View>
+          </Modal>
+        </View>
       )
 
 
