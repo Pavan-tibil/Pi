@@ -15,57 +15,57 @@ export default app = () => {
   const Subjects = () => {
     let subjects = predictions.subjects;
 
-  console.log(subjects);
+    console.log(subjects);
     return (
       <>
 
         <View style={cardStyles.container}>
-        <Text style={{ color: '#396677', fontFamily: 'fira sans', fontSize: 10, marginBottom: 20 }}>{'Medium'.toUpperCase()} : <Text style={{ fontSize: 14, color: '#07394D' }}>{'ENG'}</Text></Text>
+          <Text style={{ color: '#396677', fontFamily: 'fira sans', fontSize: 10, marginBottom: 20 }}>{'Medium'.toUpperCase()} : <Text style={{ fontSize: 14, color: '#07394D' }}>{'ENG'}</Text></Text>
           <ScrollView>
 
-          <Card subject={subjects[0]}></Card>
-          <Card subject={subjects[1]}></Card> 
-          <Card subject={subjects[2]}></Card>  
-          <Card subject={subjects[3]}></Card> 
-          <Card subject={subjects[4]}></Card>
-          <Card subject={subjects[5]}></Card>  
+            <Card subject={subjects[0]}></Card>
+            <Card subject={subjects[1]}></Card>
+            <Card subject={subjects[2]}></Card>
+            <Card subject={subjects[3]}></Card>
+            <Card subject={subjects[4]}></Card>
+            <Card subject={subjects[5]}></Card>
 
           </ScrollView>
         </View>
 
-        </>
+      </>
     );
   };
 
   const Card = (props) => {
-      let sub = props.subject;
-      return (
-        <View style={cardStyles.table}>
-  
-          <View style={cardStyles.row}>
-            <View style={cardStyles.cell}>
-              <Text style={{ fontSize: 10, color: '#396677' }}> SUBJECT CODE: </Text>
-              <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.subject_code} </Text>
-            </View>
-            <View style={cardStyles.cell}>
-              <Text style={{ fontSize: 10, color: '#396677' }}> SUBJECT NAME: </Text>
-              <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.subject_name} </Text>
-            </View>
+    let sub = props.subject;
+    return (
+      <View style={cardStyles.table}>
+
+        <View style={cardStyles.row}>
+          <View style={cardStyles.cell}>
+            <Text style={{ fontSize: 10, color: '#396677' }}> SUBJECT CODE: </Text>
+            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.subject_code  || " "} </Text>
           </View>
-          <View style={cardStyles.row}>
-            <View style={cardStyles.cell}>
-              <Text style={{ fontSize: 10, color: '#396677' }}> MAX MARKS: </Text>
-              <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.max_marks} </Text>
-            </View>
-            <View style={cardStyles.cell}>
-              <Text style={{ fontSize: 10, color: '#396677' }}> MARKS OBTAINED: </Text>
-              <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.obtained_marks} </Text>
-            </View>
+          <View style={cardStyles.cell}>
+            <Text style={{ fontSize: 10, color: '#396677' }}> SUBJECT NAME: </Text>
+            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.subject_name  || " "}  </Text>
           </View>
-  
         </View>
-        
-      )
+        <View style={cardStyles.row}>
+          <View style={cardStyles.cell}>
+            <Text style={{ fontSize: 10, color: '#396677' }}> MAX MARKS: </Text>
+            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.max_marks  || " "} </Text>
+          </View>
+          <View style={cardStyles.cell}>
+            <Text style={{ fontSize: 10, color: '#396677' }}> MARKS OBTAINED: </Text>
+            <Text style={{ fontSize: 14, color: '#07394D' }}> {sub.obtained_marks || " " }  </Text>
+          </View>
+        </View>
+
+      </View>
+
+    )
   }
 
   const cardStyles = StyleSheet.create({
@@ -83,7 +83,7 @@ export default app = () => {
       shadowRadius: 4,
       elevation: 2,
       width: '80%',
-      
+
       flex: 1,
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -108,7 +108,7 @@ export default app = () => {
       flex: 1,
       justifyContent: 'flex-end',
       alignItems: 'flex-end',
-    },    table: {
+    }, table: {
       marginBottom: 20,
       borderWidth: 1,
       borderRadius: 1,
@@ -151,7 +151,7 @@ export default app = () => {
 
   useEffect(() => {
     // call scanDocument on load
-     scanDocument();
+    scanDocument();
     // setPredictions({
     //   "cert_details": [
     //     {
@@ -243,7 +243,7 @@ export default app = () => {
     //   ]
     // }
     // );
-    toggleModal();
+    // toggleModal();
   }, []);
 
 
@@ -281,15 +281,25 @@ export default app = () => {
     try {
       setIsLoading(true);
       let response = await axios.post("http://localhost:3000/data", body);
-      console.log('resp', response.data.data);
-      setPredictions(response.data.data);
-      toggleModal();
-      setIsLoading(false);
+      console.log('resp', response.data);
+      setPredictions(response.data);
+
+      // setIsLoading(false);
+      // setTimeout(3);
+      // toggleModal();
+      setTimeout(() => {
+        console.log(predictions);
+        setIsLoading(false);
+        toggleModal();
+        
+      }, 1000);
     } catch (e) {
       console.log('err', e);
       setIsLoading(false);
     }
   }
+
+
 
   const goToNextPage = () => {
     if (resultsPage < 3) {
@@ -299,11 +309,11 @@ export default app = () => {
   }
 
   const goToFirstPage = () => {
-      setResultsPage(1);
+    setResultsPage(1);
   }
 
   const goToLastPage = () => {
-      setResultsPage(3);
+    setResultsPage(3);
   }
 
   const goToPrevPage = () => {
@@ -316,7 +326,7 @@ export default app = () => {
   const tableStyles = StyleSheet.create({
     headerText: {
       color: '#052C3C',
-     // fontFamily: 'FiraSans-Regular',
+      // fontFamily: 'FiraSans-Regular',
       fontSize: 20,
       fontWeight: 'bold',
       textAlign: 'center',
@@ -348,7 +358,7 @@ export default app = () => {
       fontFamily: 'FiraSans-Regular',
       fontWeight: "500",
       height: 44,
-    },cell2: {
+    }, cell2: {
       flex: 1,
       padding: 10,
       borderWidth: 1,
@@ -386,7 +396,8 @@ export default app = () => {
       { label: "MONTH & YEAR OF EXAM", key: "month_year" },
       { label: "SR. NO. OF STATEMENT", key: "sr_no" },
       { label: "CANDIDATE’S FULL NAME", key: "name" },
-      { label: "CANDIDATE’S MOTHER’S NAME", key: "mothers_name" },]
+      { label: "CANDIDATE’S MOTHER’S NAME", key: "mothers_name" }
+    ]
     return (
       <>
         <View>
@@ -396,7 +407,7 @@ export default app = () => {
           {certDetailsKeys.map((data, index) => (
             <View style={tableStyles.row} key={`${index}-prediction`}>
               <Text style={tableStyles.cell}>{data.label} </Text>
-              <Text style={[tableStyles.cell2,{fontSize:14}]}> {predictions.cert_details.find(obj => obj[data.key])[data.key]} </Text>
+              <Text style={[tableStyles.cell2, { fontSize: 14 }]}> {predictions.cert_details.find(obj => obj[data.key])[data.key]} </Text>
             </View>
           ))}
         </View>
@@ -421,7 +432,7 @@ export default app = () => {
           {resultKeys.map((data, index) => (
             <View style={tableStyles.row} key={`${index}-prediction`}>
               <Text style={tableStyles.cell}>{data.label} </Text>
-              <Text style={[tableStyles.cell, {fontSize:14}]}> {predictions.result.find(obj => obj[data.key])[data.key]} </Text>
+              <Text style={[tableStyles.cell, { fontSize: 14 }]}> {predictions.result.find(obj => obj[data.key])[data.key]} </Text>
             </View>
           ))}
         </View>
@@ -443,7 +454,7 @@ export default app = () => {
       case 1:
         return (
           <View style={tableStyles.container}>
-            <Table/>
+            <Table />
           </View>
         )
       case 2:
@@ -477,7 +488,7 @@ export default app = () => {
       paddingHorizontal: 60,
       alignItems: 'center',
       backgroundColor: 'white'
-    },    
+    },
     logo: {
       justifyContent: "center",
       alignItems: 'center',
@@ -533,16 +544,16 @@ export default app = () => {
             </View>
 
             <View style={styles.buttonsContainer}>
-              <Icon disabled={ resultsPage === 1 ? true: false } disabledStyle={ resultsPage === 1 ? styles.disabledIcon: styles.enabledIcon} name="verticleright" size={20} type="antdesign" color="#199AB7" onPress={goToFirstPage} />
-              <Icon disabled={ resultsPage === 1 ? true: false } disabledStyle={ resultsPage === 1 ? styles.disabledIcon: styles.enabledIcon} name="left" size={20} color="#199AB7" type="antdesign" onPress={goToPrevPage} />
+              <Icon disabled={resultsPage === 1 ? true : false} disabledStyle={resultsPage === 1 ? styles.disabledIcon : styles.enabledIcon} name="verticleright" size={20} type="antdesign" color="#199AB7" onPress={goToFirstPage} />
+              <Icon disabled={resultsPage === 1 ? true : false} disabledStyle={resultsPage === 1 ? styles.disabledIcon : styles.enabledIcon} name="left" size={20} color="#199AB7" type="antdesign" onPress={goToPrevPage} />
               <Text>{resultsPage}</Text>
-              <Icon disabled={ resultsPage === 3 ? true: false } disabledStyle={styles.disabledIcon} name="right" size={20} color="#199AB7" type="antdesign" onPress={goToNextPage} />
-              <Icon disabled={ resultsPage === 3 ? true: false } disabledStyle={styles.disabledIcon} name="verticleleft" size={20} type="antdesign" onPress={goToLastPage}  color="#199AB7" />
+              <Icon disabled={resultsPage === 3 ? true : false} disabledStyle={styles.disabledIcon} name="right" size={20} color="#199AB7" type="antdesign" onPress={goToNextPage} />
+              <Icon disabled={resultsPage === 3 ? true : false} disabledStyle={styles.disabledIcon} name="verticleleft" size={20} type="antdesign" onPress={goToLastPage} color="#199AB7" />
             </View>
             <View style={styles.logo}>
-            <Image source={require('./assets/images/P!_logo.png')} style={{ width: 17, height: 20 }}/>
+              <Image source={require('./assets/images/P!_logo.png')} style={{ width: 17, height: 20 }} />
             </View>
-            
+
           </View>
 
         </Modal>
