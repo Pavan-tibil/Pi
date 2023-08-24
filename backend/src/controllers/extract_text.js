@@ -121,6 +121,10 @@ exports.extractData = async (req, res) => {
                     workerConfig.tessedit_pageseg_mode = PSM.SINGLE_DIGIT;
                     workerConfig.tessedit_char_whitelist = '0123456789';
                 }
+                else {
+                    workerConfig.tessedit_pageseg_mode = PSM.SINGLE_BLOCK;
+                    workerConfig.tessedit_char_whitelist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.-&IVXLCDM, ';
+                }
 
                 await worker.loadLanguage('eng');
                 await worker.initialize('eng');
